@@ -1,1 +1,61 @@
 crearea unui model(table) si adaugarea in baza de date
+adaugare tabela Profesor in Student.cs:
+public class Profesor : BaseEntity
+{
+
+    public string? Name { get; set; }
+    public string? Email { get; set; }
+
+    }
+crearea unei migrari AddProfesorTable.cs
+using System;
+using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace Lab3_23.Migrations
+{
+    /// <inheritdoc />
+    public partial class AddProfesorTable : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.CreateTable(
+                name: "Profesors",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Profesors", x => x.Id);
+                });
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "Profesors");
+        }
+    }
+}
+Adaugare table in contextul bazei de date Lab3Context.cs
+using Lab3_23.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace Lab3_23.Data
+{
+    public class Lab3Context: DbContext
+    {
+        public DbSet<Student> Students { get; set; }
+        public Lab3Context(DbContextOptions<Lab3Context> options) : base(options) { }
+        public DbSet<Profesor> Profesors { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder) { }
+    }
+}
